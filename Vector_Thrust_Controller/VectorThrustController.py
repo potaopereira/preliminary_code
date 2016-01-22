@@ -162,7 +162,7 @@ class Vector_Thrust_Controller(object):
         # nTd_v_v   = OP(nTd)*diag(u_v)/normTd
 
 
-        xi = 1 - dot(n,nTd)
+        xi = 1.0 - dot(n,nTd)
         Vtt0,Vtt1,Vtt2 = self._Vtheta(xi)
         xi_t = -dot(n,nTd_t)
         xi_p = -dot(n,nTd_p)
@@ -191,13 +191,13 @@ class Vector_Thrust_Controller(object):
 
         w_star_t = dot(-skew(aux_w_star/normTd),nTd_t)               + \
                    dot(skew(nTd),aux_w_star_t/normTd)                + \
-                   dot((-1)*skew(nTd),aux_w_star/normTd**2*normTd_t)
+                   dot((-1.0)*skew(nTd),aux_w_star/normTd**2*normTd_t)
         w_star_p = dot(-skew(aux_w_star/normTd),nTd_p)               + \
                    dot(skew(nTd),aux_w_star_p/normTd)                + \
-                   dot((-1)*skew(nTd),outer(aux_w_star,normTd_p)/normTd**2)
+                   dot((-1.0)*skew(nTd),outer(aux_w_star,normTd_p)/normTd**2)
         w_star_v = dot(-skew(aux_w_star/normTd),nTd_v)               + \
                    dot(skew(nTd),aux_w_star_v/normTd)                + \
-                   dot((-1)*skew(nTd),outer(aux_w_star,normTd_v)/normTd**2)
+                   dot((-1.0)*skew(nTd),outer(aux_w_star,normTd_v)/normTd**2)
         w_star_n = dot(skew(nTd),aux_w_star_n/normTd)    
                   
         # TESTED:  
@@ -212,7 +212,7 @@ class Vector_Thrust_Controller(object):
         # desired angular velocity
         wd = ktt2*dot(skew(n),nTd)      + \
              w_star                     + \
-             (-1)*dot(skew(n),V_v)*normTd*1/Vtt1 
+             (-1.0)*dot(skew(n),V_v)*normTd*1.0/Vtt1 
 
         # aux1    = ktt2*skew(n)*nTd
         # aux1Dot = ktt2*skew(n)*nTd_t + ktt2*skew(n)*nTd_p*v +  ktt2*skew(n)*nTd_v*(u - OP(n)*Td) - ktt2*skew(nTd)*skew(w)*n
@@ -248,10 +248,10 @@ class Vector_Thrust_Controller(object):
         kw   = self.kw
         kw2  = self.kw2
         ew   = dot(skew(n),w - wd)
-        Tau  = dot(skew(n),-wdDot - 1/kw*Vtt1*dot(skew(n),nTd) - dot(skew(n),wd)*dot(n,wd)) + kw2*ew
+        Tau  = dot(skew(n),-wdDot - 1.0/kw*Vtt1*dot(skew(n),nTd) - dot(skew(n),wd)*dot(n,wd)) + kw2*ew
 
         ## Lyapunov check
-        V  = Vpv + Vtt0 + 1/2*kw*dot(ew,ew)
+        V  = Vpv + Vtt0 + 1.0/2.0*kw*dot(ew,ew)
         VD = VpvD - ktt2*Vtt1*numpy.linalg.norm(dot(skew(n),nTd))**2 - kw2*kw*dot(ew,ew)
 
         V_dT   = dot(V_v - Vtt1*dot(nTd_v.T,n) + kw*dot(wd_v.T,dot(skew(n),ew)),n)
