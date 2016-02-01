@@ -1,6 +1,7 @@
-created readme file
+<!-- created readme file -->
 
 
-~~
-Controller for system
-~~
+# Controller for system ...
+```python
+U = ....
+```
