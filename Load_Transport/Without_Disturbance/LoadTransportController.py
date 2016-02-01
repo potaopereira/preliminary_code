@@ -41,7 +41,8 @@ from numpy import zeros as zeros
 import sys; import os
 sys.path.insert(0, os.path.abspath('../../'))
 print(sys.path)
-from Vector_Thrust_Controller.VectorThrustController import Vector_Thrust_Controller
+from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
+# from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
 
 
 
@@ -60,15 +61,20 @@ def skew(x):
 
 class Load_Transport_Controller(object): 
 
-    # quadrotor mass
-    m = 1.56779
-    # load mass
-    M = 0.100
-    # cable length
-    L = 0.6
+    # # quadrotor mass
+    # m = 1.56779
+    # # load mass
+    # M = 0.100
+    # # cable length
+    # L = 0.6
 
-    # gravity
-    g = 9.81
+    # # gravity
+    # g = 9.81
+
+    M      = 0.200
+    m      = 1.250
+    L      = 0.5
+    g      = 9.81    
 
     # PAR = collections.namedtuple('VT_paramteres',['...','...'])
     # par = PAR(...,...)
