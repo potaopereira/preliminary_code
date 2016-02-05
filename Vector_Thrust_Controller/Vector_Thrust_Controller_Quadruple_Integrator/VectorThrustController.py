@@ -95,6 +95,9 @@ class Vector_Thrust_Controller(object):
     def output(self,x,gravity):
         return self._VectorThrustController(x,gravity)
 
+    def report(self):
+        return self.DI_Ctrll.report()
+
     def _Vtheta(self,x):
 
         #     ee = self.ee

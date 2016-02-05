@@ -50,6 +50,13 @@ class DI_controller(object):
     def output(self,p,v):
         return self._DI_Bounded(p,v)
 
+    def report(self):
+        description = "Bounded Double Integrator Controller u(p,v) = -sigma(p) - ro(v): simple control law, complicated Lyapunov function\n"
+        controller  = "Parameters: sat(x) = k x/sqrt(1 + x**2), with sigma(p) = kp*sat(p/sigma_p) and ro(p) = kv*sat(v/sigma_v)\n"  
+        parameters  = "kp = " + str(self.kp) + " and kv = " + str(self.kv) + " and sigma_p = " +  str(self.sigma_p) + "and sigma_v = " +  str(self.sigma_v) + "\n\n"
+        return description + controller + parameters
+
+
     def _sat(self,x):
 
         sat     =  1.0/sqrt(1.0 + x**2)

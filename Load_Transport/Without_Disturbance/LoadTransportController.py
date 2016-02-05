@@ -41,9 +41,8 @@ from numpy import zeros as zeros
 import sys; import os
 sys.path.insert(0, os.path.abspath('../../'))
 print(sys.path)
-from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
-# from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
-
+# from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
+from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
 
 
 import collections
@@ -96,6 +95,9 @@ class Load_Transport_Controller(object):
         U = self._input_transform(Thrust,Tau)
 
         return U
+
+    def report(self):
+        return self.VT_Ctrll.report()
 
 
     def _state_transform(self,state,stated):

@@ -166,6 +166,8 @@ Load_Ctroll = Load_Transport_Controller()
 PAR = collections.namedtuple('DI_paramteres',['M','m','L','g','Controller'])
 parameters = PAR(M,m,L,g,Load_Ctroll)
 
+print Load_Ctroll.report()
+
 #--------------------------------------------------------------------------#
 # initial states
 
@@ -217,7 +219,7 @@ y0 = states0
 
 r.set_initial_value(y0, t0).set_f_params(parameters)
 
-t1 = 10
+t1 = 1.0
 dt = 0.01
 Time = [];
 Yvalue = [];
