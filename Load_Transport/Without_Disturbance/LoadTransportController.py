@@ -41,8 +41,8 @@ from numpy import zeros as zeros
 import sys; import os
 sys.path.insert(0, os.path.abspath('../../'))
 print(sys.path)
-# from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
-from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
+from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
+# from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
 
 
 import collections
@@ -78,8 +78,38 @@ class Load_Transport_Controller(object):
     # PAR = collections.namedtuple('VT_paramteres',['...','...'])
     # par = PAR(...,...)
     # VT_Ctrll = Vector_Thrust_Controller()
+
+    # ---------------------------------- #
+    # Double Integrator Parameters
+    wn      = 2.0
+    xi      = sqrt(2)/2.0
+    kv      = 2.0*xi*wn
+    sigma_v = 0.5
+    kp      = wn**2
+    sigma_p = 0.5
+    eps     = 0.01
+
+    PAR = collections.namedtuple('DI_paramteres',['kv','sigma_v','kp','sigma_p','eps'])
+    parameters_di = PAR(kv,sigma_v,kp,sigma_p,eps) 
     
-    VT_Ctrll = Vector_Thrust_Controller()
+    # ---------------------------------- #
+    # Parameters backstepping 
+    ktt  = 2.0
+    ktt2 = sqrt(2)/2.0
+    kw   = 2.0*xi*wn
+    kw2  = 0.5
+
+    PAR = collections.namedtuple('paramteres_backstepping',['ktt','ktt2','kw','kw2'])
+    parameters_backstepping = PAR(ktt,ktt2,kw,kw2)   
+
+    # ---------------------------------- #
+    PAR = collections.namedtuple('paramteres',['parameters_di','parameters_backstepping'])
+    parameters = PAR(parameters_di,parameters_backstepping) 
+    # print(parameters)
+    # ---------------------------------- #
+
+    
+    VT_Ctrll = Vector_Thrust_Controller(parameters)
     
     
     # The class "constructor" - It's actually an initializer
@@ -97,7 +127,9 @@ class Load_Transport_Controller(object):
         return U
 
     def report(self):
-        return self.VT_Ctrll.report()
+        description = "Controller for Load Lifting\n"
+        parameters  = "quad mass = " + str(self.m) + "(kg), load mas = " + str(self.M) + "(kg), cable length = " + str(self.L) + "(m), gravity = " + str(self.g) + "(m/s/s).\n\n"
+        return description + parameters + self.VT_Ctrll.report()
 
 
     def _state_transform(self,state,stated):

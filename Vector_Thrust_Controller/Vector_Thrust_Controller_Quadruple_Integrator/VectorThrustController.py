@@ -70,7 +70,7 @@ class Vector_Thrust_Controller(object):
     eps     = 0.01
 
     PAR = collections.namedtuple('DI_paramteres',['kv','sigma_v','kp','sigma_p','eps'])
-    par = PAR(kv,sigma_v,kp,sigma_p,eps) 
+    par = PAR(kv,sigma_v,kp,sigma_p,eps)
     # print(par)
     
     DI_Ctrll = DI_controller(par)
@@ -92,11 +92,21 @@ class Vector_Thrust_Controller(object):
     # def __init__(self):
     #   self.M = 1.1
 
+    # The class "constructor" - It's actually an initializer
+    def __init__(self,parameters = None):
+        if parameters is not None:
+            if parameters.parameters_di is not None:
+                DI_Ctrll = DI_controller(parameters.parameters_di)
+
+
     def output(self,x,gravity):
         return self._VectorThrustController(x,gravity)
 
     def report(self):
-        return self.DI_Ctrll.report()
+        description   = "Vector Thrust Controller based on double integrator for z component, and quadruple integrator for x and y components \n\n"
+        controller_z  = "Controller for z component\n" + self.DI_Ctrll.report()
+        controller_xy = "Controller for xy components\n" + self.QI_Ctrll.report()
+        return description + controller_z + controller_xy
 
     def _Vtheta(self,x):
 

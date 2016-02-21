@@ -81,10 +81,18 @@ class Vector_Thrust_Controller(object):
     ktt2    = 0.5
     kw      = 200.0
     kw2     = 0.5            
-    
+
     # The class "constructor" - It's actually an initializer
-    # def __init__(self):
-    #   self.M = 1.1
+    def __init__(self,parameters = None):
+        if parameters is not None:
+            if parameters.parameters_di is not None:
+                DI_Ctrll = DI_controller(parameters.parameters_di)
+            if parameters.parameters_backstepping is not None:
+                self.ktt     = parameters.parameters_backstepping.ktt
+                self.ktt2    = parameters.parameters_backstepping.ktt2
+                self.kw      = parameters.parameters_backstepping.kw
+                self.kw2     = parameters.parameters_backstepping.ktt2
+
 
     def output(self,x,gravity):
         return self._VectorThrustController(x,gravity)

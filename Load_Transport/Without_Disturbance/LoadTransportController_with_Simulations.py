@@ -219,7 +219,7 @@ y0 = states0
 
 r.set_initial_value(y0, t0).set_f_params(parameters)
 
-t1 = 1.0
+t1 = 2.0
 dt = 0.01
 Time = [];
 Yvalue = [];

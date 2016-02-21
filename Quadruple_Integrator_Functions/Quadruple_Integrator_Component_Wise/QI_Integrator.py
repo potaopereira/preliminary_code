@@ -59,6 +59,11 @@ class QI_controller(object):
     def output(self,x1,x2,x3,x4):
         return self._quadruple_integrator(x1,x2,x3,x4)
 
+    def report(self):
+        description = "controller for fourth order integrator: x^(4) = u(x^(0),x^(1),x^(2),x^(3)), where u = K x\n"
+        parameters  = "Controller gain: K = " + str(self.K) + " and P is found for PA + A^T P = - I (P is important if gradient of Lyapunov is used)"
+        return description + parameters + "\n\n"
+
     def  _quadruple_integrator(self,x1,x2,x3,x4):
 
         # state
