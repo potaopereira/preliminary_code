@@ -38,11 +38,20 @@ from numpy import zeros as zeros
 # from ..Vector_Thrust_Controller.VectorThrustController import Vector_Thrust_Controller
 
 # Path hack.
-import sys; import os
-sys.path.insert(0, os.path.abspath('../../'))
-print(sys.path)
+# import sys; import os
+# sys.path.insert(0, os.path.abspath('../../'))
+# print(sys.path)
+# from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
+# from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
+
+
+# Relative path
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
 # from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
+
 
 
 import collections
