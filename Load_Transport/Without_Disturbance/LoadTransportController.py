@@ -49,8 +49,8 @@ from numpy import zeros as zeros
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
-from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
-# from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
+# from Vector_Thrust_Controller.Vector_Thrust_Controller_Double_Integrator_and_Toque_Backstepping.VectorThrustController import Vector_Thrust_Controller
+from Vector_Thrust_Controller.Vector_Thrust_Controller_Quadruple_Integrator.VectorThrustController import Vector_Thrust_Controller
 
 
 
