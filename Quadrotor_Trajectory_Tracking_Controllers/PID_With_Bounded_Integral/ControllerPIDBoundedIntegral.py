@@ -6,6 +6,8 @@ import rospy
 
 import numpy
 
+import collections
+
 # Relative path
 import sys
 import os
