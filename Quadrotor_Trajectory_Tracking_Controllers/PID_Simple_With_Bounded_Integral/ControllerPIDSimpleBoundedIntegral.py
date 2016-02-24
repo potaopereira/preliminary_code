@@ -51,7 +51,7 @@ class ControllerPIDBounded():
     GAIN_KV_XY = kv
 
     wn      = 2.0
-    xi      = sqrt(2)/2.0
+    xi      = numpy.sqrt(2)/2.0
     kv      = 2.0*xi*wn
     kp      = wn**2    
 
