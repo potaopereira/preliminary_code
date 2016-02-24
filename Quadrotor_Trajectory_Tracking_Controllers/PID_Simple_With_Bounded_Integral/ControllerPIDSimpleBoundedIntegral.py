@@ -154,14 +154,14 @@ class ControllerPIDBounded():
 
         kp     = self.GAIN_KP_XY
         kv     = self.GAIN_KV_XY
-        u[0]   = kp*ep[0] + kv*ev[0]
-        u[1]   = kp*ep[1] + kv*ev[1]
+        u[0]   = -kp*ep[0] - kv*ev[0]
+        u[1]   = -kp*ep[1] - kv*ev[1]
         V_v[0] = (kp/2*ep[0] + ev[0])
         V_v[1] = (kp/2*ep[1] + ev[1])
 
         kp     = self.GAIN_KV_Z
         kv     = self.GAIN_KV_Z
-        u[2]   = kp*ep[2] + kv*ev[2]
+        u[2]   = -kp*ep[2] - kv*ev[2]
         V_v[2] = (kp/2*ep[2] + ev[2])
 
         return (u,V_v)
