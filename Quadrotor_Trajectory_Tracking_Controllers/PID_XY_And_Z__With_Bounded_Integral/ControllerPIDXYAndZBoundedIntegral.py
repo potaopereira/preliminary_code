@@ -6,7 +6,7 @@ import rospy
 
 import numpy
 
-from SomeFunctions import Rz,GetEulerAngles,GetRotFromEulerAnglesDeg
+from SomeFunctions import GetRotFromEulerAnglesDeg
 
 from Controllers_Parameters import parameters_sys
 
@@ -15,7 +15,7 @@ from Controllers_Parameters import parameters_sys
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from Double_Integrator_Functions.Double_Integrator_Bounded_Not_Component_wise_No_Inertial_Measurements_needed.DI_Bounded_2 import DI_controller
+from Double_Integrator_Functions.Double_Integrator_Bounded_Not_Component_wise_No_Inertial_Measurements_needed.DI_Bounded_1 import DI_controller
 
 
 #--------------------------------------------------------------------------#
@@ -27,7 +27,7 @@ def bound(x,maxmax,minmin):
 #----------------------------------------------------------#
 # This is a dynamic controller, not a static controller
 
-class ControllerPIDBounded():
+class ControllerPIDXYAndZBounded():
     
     MASS    = 1.66779
 
@@ -47,7 +47,25 @@ class ControllerPIDBounded():
     par = PAR(kv,sigma_v,kp,sigma_p,eps) 
     # print(par)
     
-    DI_Ctrll = DI_controller(par)
+    DI_Ctrll_xy = DI_controller(par)
+
+
+    # -----------------------------------------------------------------------------#
+
+    wn      = 2.0
+    xi      = sqrt(2)/2.0
+    kv      = 2.0*xi*wn
+    sigma_v = 0.5
+    kp      = wn**2
+    sigma_p = 0.5
+    eps     = 0.01
+
+    PAR = collections.namedtuple('DI_paramteres',['kv','sigma_v','kp','sigma_p','eps'])
+    par = PAR(kv,sigma_v,kp,sigma_p,eps) 
+    # print(par)
+    
+    DI_Ctrll_z = DI_controller(par)    
+
 
     # -----------------------------------------------------------------------------#
     # estimated disturbance
@@ -119,7 +137,7 @@ class ControllerPIDBounded():
         ep = x - xd
         ev = v - vd
 
-        u,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v,V_v_p,V_v_v = self.DI_Ctrll.output(ep,ev)
+        u,V_v = self.input_and_gradient_of_lyapunov(ep,ev)
 
         Full_actuation = self.MASS*(ad + u + self.GRAVITY*e3 - self.d_est)
 
@@ -139,3 +157,14 @@ class ControllerPIDBounded():
         # -----------------------------------------------------------------------------#
 
         return Full_actuation
+
+        def input_and_gradient_of_lyapunov(self,ep,ev):
+
+            u_x,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_x,V_v_p,V_v_v = self.DI_Ctrll_xy.output(ep[0],ev[0])
+            u_y,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_y,V_v_p,V_v_v = self.DI_Ctrll_xy.output(ep[1],ev[1])
+            u_z,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_z,V_v_p,V_v_v = self.DI_Ctrll_z.output(ep[2],ev[2])
+
+            u   = numpy.array([u_x,u_y,u_z])
+            V_v = numpy.array([V_v_x,V_v_y,V_v_z])
+
+            return (u,V_v)

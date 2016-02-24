@@ -6,16 +6,7 @@ import rospy
 
 import numpy
 
-from SomeFunctions import Rz,GetEulerAngles,GetRotFromEulerAnglesDeg
-
-from Controllers_Parameters import parameters_sys
-
-
-# Relative path
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from Double_Integrator_Functions.Double_Integrator_Bounded_Not_Component_wise_No_Inertial_Measurements_needed.DI_Bounded_2 import DI_controller
+from SomeFunctions import GetRotFromEulerAnglesDeg
 
 
 #--------------------------------------------------------------------------#
@@ -38,16 +29,17 @@ class ControllerPIDBounded():
     wn      = 2.0
     xi      = sqrt(2)/2.0
     kv      = 2.0*xi*wn
-    sigma_v = 0.5
     kp      = wn**2
-    sigma_p = 0.5
-    eps     = 0.01
+    GAIN_KP_XY = kp
+    GAIN_KV_XY = kv
 
-    PAR = collections.namedtuple('DI_paramteres',['kv','sigma_v','kp','sigma_p','eps'])
-    par = PAR(kv,sigma_v,kp,sigma_p,eps) 
-    # print(par)
-    
-    DI_Ctrll = DI_controller(par)
+    wn      = 2.0
+    xi      = sqrt(2)/2.0
+    kv      = 2.0*xi*wn
+    kp      = wn**2    
+
+    GAIN_KV_Z  = kp
+    GAIN_KV_Z  = kv
 
     # -----------------------------------------------------------------------------#
     # estimated disturbance
@@ -110,16 +102,14 @@ class ControllerPIDBounded():
 
         #--------------------------------------#
         # desired quad trajectory
-        xd = states_d[0:3];
-        vd = states_d[3:6];
-        ad = states_d[6:9];
+        xd = states_d[0:3]; vd = states_d[3:6]; ad = states_d[6:9];
         
         #--------------------------------------#
         # position error and velocity error
         ep = x - xd
         ev = v - vd
 
-        u,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v,V_v_p,V_v_v = self.DI_Ctrll.output(ep,ev)
+        u,V_v = self.input_and_gradient_of_lyapunov(ep,ev)
 
         Full_actuation = self.MASS*(ad + u + self.GRAVITY*e3 - self.d_est)
 
@@ -139,3 +129,22 @@ class ControllerPIDBounded():
         # -----------------------------------------------------------------------------#
 
         return Full_actuation
+
+    def input_and_gradient_of_lyapunov(self,ep,ev):
+
+        u    = numpy.array([0.0,0.0,0.0])
+        V_v  = numpy.array([0.0,0.0,0.0])
+
+        kp     = self.GAIN_KP_XY
+        kv     = self.GAIN_KV_XY
+        u[0]   = kp*ep[0] + kv*ev[0]
+        u[1]   = kp*ep[1] + kv*ev[1]
+        V_v[0] = (kp/2*ep[0] + ev[0])
+        V_v[1] = (kp/2*ep[1] + ev[1])
+
+        kp     = self.GAIN_KV_Z
+        kv     = self.GAIN_KV_Z
+        u[2]   = kp*ep[2] + kv*ev[2]
+        V_v[2] = (kp/2*ep[2] + ev[2])
+
+        return (u,V_v)
