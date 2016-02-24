@@ -6,16 +6,33 @@ import rospy
 
 import numpy
 
-from SomeFunctions import GetRotFromEulerAnglesDeg
 
 
 #--------------------------------------------------------------------------#
+from numpy import cos as c
+from numpy import sin as s
+import math
+
 # this function works for arrays
 def bound(x,maxmax,minmin):
-
     return numpy.maximum(minmin,numpy.minimum(maxmax,x))
 
-#----------------------------------------------------------#
+def Rx(tt):    
+    return numpy.array([[1.0,0.0,0.0],[0.0,c(tt),-s(tt)],[0.0,s(tt),c(tt)]])
+
+def Ry(tt):
+    return numpy.array([[c(tt),0.0,s(tt)],[0.0,1,0.0],[-s(tt),0.0,c(tt)]])
+
+def Rz(tt):    
+    return numpy.array([[c(tt),-s(tt),0.0],[s(tt),c(tt),0.0],[0.0,0.0,1]])
+
+def GetRotFromEulerAngles(ee_rad):
+    return Rz(ee_rad[2]).dot(Ry(ee_rad[1]).dot(Rx(ee_rad[0])))
+
+def GetRotFromEulerAnglesDeg(ee_deg):
+    return GetRotFromEulerAngles(ee_deg*math.pi/180.0)
+
+#--------------------------------------------------------------------------#
 # This is a dynamic controller, not a static controller
 
 class ControllerPIDBounded():
@@ -27,7 +44,7 @@ class ControllerPIDBounded():
     # -----------------------------------------------------------------------------#
 
     wn      = 2.0
-    xi      = sqrt(2)/2.0
+    xi      = numpy.sqrt(2)/2.0
     kv      = 2.0*xi*wn
     kp      = wn**2
     GAIN_KP_XY = kp
