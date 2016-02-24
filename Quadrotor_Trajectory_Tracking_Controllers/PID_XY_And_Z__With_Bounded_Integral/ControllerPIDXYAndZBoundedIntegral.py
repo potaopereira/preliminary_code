@@ -173,13 +173,13 @@ class ControllerPIDXYAndZBounded():
 
         return Full_actuation
 
-        def input_and_gradient_of_lyapunov(self,ep,ev):
+    def input_and_gradient_of_lyapunov(self,ep,ev):
 
-            u_x,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_x,V_v_p,V_v_v = self.DI_Ctrll_xy.output(ep[0],ev[0])
-            u_y,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_y,V_v_p,V_v_v = self.DI_Ctrll_xy.output(ep[1],ev[1])
-            u_z,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_z,V_v_p,V_v_v = self.DI_Ctrll_z.output(ep[2],ev[2])
+        u_x,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_x,V_v_p,V_v_v = self.DI_Ctrll_xy.output(ep[0],ev[0])
+        u_y,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_y,V_v_p,V_v_v = self.DI_Ctrll_xy.output(ep[1],ev[1])
+        u_z,u_p,u_v,u_p_p,u_v_v,u_p_v,Vpv,VpvD,V_p,V_v_z,V_v_p,V_v_v = self.DI_Ctrll_z.output(ep[2],ev[2])
 
-            u   = numpy.array([u_x,u_y,u_z])
-            V_v = numpy.array([V_v_x,V_v_y,V_v_z])
+        u   = numpy.array([u_x,u_y,u_z])
+        V_v = numpy.array([V_v_x,V_v_y,V_v_z])
 
-            return (u,V_v)
+        return (u,V_v)
